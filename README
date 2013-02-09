@@ -1,0 +1,18 @@
+PORTDIR_OVERLAY of Yen-Chin,Lee <coldnew.tw@gmail.com>
+-----------------------------------------------------
+
+This overlay is for ASUS tf700t (expermental)
+
+INSTALL:
+
+  Edit /etc/layman/layman.cfg and add this (second line):
+
+     overlays  : http://www.gentoo.org/proj/en/overlays/repositories.xml
+                 https://raw.github.com/coldnew/tf700-overlay/master/tf700-overlay.xml
+
+  Then:
+
+     layman -L
+     layman -a tf700
+
+After this you can emerge everything from this overlay.

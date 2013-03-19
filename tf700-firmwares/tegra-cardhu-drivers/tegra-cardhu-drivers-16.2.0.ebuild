@@ -22,12 +22,12 @@ RESTRICT="strip mirror"
 
 src_unpack() {
 	unpack ${A}
-	cd nv_tegra/
+	cd Linux_for_Tegra/nv_tegra/
 	unpack ./nvidia_drivers.tbz2
 }
 
 src_install() {
-	cd nv_tegra/
+	cd Linux_for_Tegra/nv_tegra/
 	insinto /
 	doins -r usr lib etc
 }

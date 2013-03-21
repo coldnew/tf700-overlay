@@ -34,7 +34,8 @@ src_install() {
 	# TODO: add libGLES to /usr/lib/opengl that make eselect-opengl work
 
 	dodir /usr/lib
-	dosym libGLESv1_CM.so.1 /usr/lib/libGLESv1_CM.so
+	dolib.so libGLESv1_CM.so.1
+#	dosym libGLESv1_CM.so.1 /usr/lib/libGLESv1_CM.so
 	dosym libGLESv2.so.2 /usr/lib/libGLESv2.so
 	dosym libEGL.so.1 /usr/lib/libEGL.so
 

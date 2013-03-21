@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-DESCRIPTION="NVIDIA Tegra2 X.org driver"
+DESCRIPTION="NVIDIA Tegra3 X.org driver"
 
 HOMEPAGE="https://developer.nvidia.com/linux-tegra"
 SRC_URI="http://developer.download.nvidia.com/akamai/mobile/files/L4T/cardhu_Tegra-Linux-R${PV}_armhf.tbz2"
@@ -30,4 +30,9 @@ src_install() {
 	cd Linux_for_Tegra/nv_tegra/
 	insinto /
 	doins -r usr lib etc
+
+	dodir /usr/lib
+	       dosym /usr/lib/libGLESv1_CM.so.1 /usr/lib/libGLESv1_CM.so
+	       dosym /usr/lib/libGLESv2.so.2 /usr/lib/libGLESv2.so
+	       dosym /usr/lib/libEGL.so.1 /usr/lib/libEGL.so
 }

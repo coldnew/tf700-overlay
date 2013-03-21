@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-DESCRIPTION="NVIDIA Tegra2 X.org driver"
+DESCRIPTION="NVIDIA Tegra3 X.org codecs"
 
 HOMEPAGE="https://developer.nvidia.com/linux-tegra"
 SRC_URI="http://developer.download.nvidia.com/akamai/mobile/files/L4T/cardhu_Tegra-Linux-codecs-R${PV}_armhf.tbz2"

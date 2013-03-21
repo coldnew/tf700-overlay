@@ -31,8 +31,11 @@ src_install() {
 	insinto /
 	doins -r usr lib etc
 
+	# TODO: add libGLES to /usr/lib/opengl that make eselect-opengl work
+
 	dodir /usr/lib
-	       dosym /usr/lib/libGLESv1_CM.so.1 /usr/lib/libGLESv1_CM.so
+	       dosym libGLESv1_CM.so.1 libGLESv1_CM.so
+#	       dosym /usr/lib/libGLESv1_CM.so.1 /usr/lib/libGLESv1_CM.so
 	       dosym /usr/lib/libGLESv2.so.2 /usr/lib/libGLESv2.so
 	       dosym /usr/lib/libEGL.so.1 /usr/lib/libEGL.so
 }

@@ -11,7 +11,7 @@ SRC_URI=""
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~arm"
-DEPEND="x11-misc/kbdd"
+DEPEND="x11-misc/xkeyboard"
 
 src_unpack() {
              # dummy function, prevent error

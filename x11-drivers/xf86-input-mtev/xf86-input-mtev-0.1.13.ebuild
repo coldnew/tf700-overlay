@@ -49,12 +49,8 @@ src_compile() {
 	emake || doe "emake failed."
 }
 
-# src_install() {
-# 	xorg-2_src_install
-# 	dodoc README*
-# }
+src_install() {
+	cd "${S}"/xorg-x11-drv-mtev-0.1.13
+	emake DESTDIR="${D}" install
+}
 
-# This patch is cherry-picked in ahm-2.7.0
-# PATCHES=(
-# 	"${FILESDIR}"/${PN}-2.7.0-horizontal-scrolling.patch
-# )

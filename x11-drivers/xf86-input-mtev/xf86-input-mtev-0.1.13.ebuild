@@ -36,12 +36,11 @@ S="${WORKDIR}/${P}"
 BUILD_DIR="${S}"
 
 src_prepare() {
-#	epatch "${FILESDIR}"/ABI_12.patch
 	cd "${S}"
 	tar xvf *.tar.gz
 	cd "${S}"/xorg-x11-drv-mtev-0.1.13
 	epatch ../xorg-x11-drv-mtev-0.1.13-update-code-for-xserver-1.11.patch
-	epatch ../xorg-x11-drv-mtev-0.1.13-add-right-mouse-button-emulation.patch
+	#epatch ../xorg-x11-drv-mtev-0.1.13-add-right-mouse-button-emulation.patch
 }
 
 src_compile() {

@@ -12,7 +12,7 @@ SLOT="0"
 KEYWORDS="~arm"
 
 IUSE=""
-DEPEND="=tf700-firmwares/tegra-codecs-16.3.0"
+DEPEND="=media-libs/tegra3-codecs-16.3.0"
 RDEPEND="${DEPEND}"
 
 S="${WORKDIR}"

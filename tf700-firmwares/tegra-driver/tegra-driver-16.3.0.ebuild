@@ -12,8 +12,7 @@ SLOT="0"
 KEYWORDS="~arm"
 
 IUSE=""
-#DEPEND="=sys-libs/tegra-libs-${PV}"
-DEPEND=""
+DEPEND="=tf700-firmwares/tegra-codecs-16.3.0"
 RDEPEND="${DEPEND}"
 
 S="${WORKDIR}"

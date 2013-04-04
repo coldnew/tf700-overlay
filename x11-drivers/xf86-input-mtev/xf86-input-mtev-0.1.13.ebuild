@@ -13,7 +13,7 @@ XORG_EAUTORECONF="yes"
 
 inherit  git-2 eutils
 GIT_ECLASS="git-2"
-EGIT_REPO_URI="git clone git://gitorious.org/gabrbedd/xorg-x11-drv-mtev.git"
+EGIT_REPO_URI="git://gitorious.org/gabrbedd/xorg-x11-drv-mtev.git"
 
 #EGIT_REPO_URI="git://gitorious.org/xorg/xf86-input-mtev.git"
 # Set this if you compile from a branch other than master.

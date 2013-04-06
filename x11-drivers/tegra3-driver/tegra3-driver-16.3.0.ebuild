@@ -15,7 +15,9 @@ IUSE=""
 DEPEND="=media-libs/tegra3-codecs-16.3.0"
 RDEPEND="${DEPEND}"
 
-S="${WORKDIR}"
+S="${WORKDIR}/Linux_for_Tegra/nv_tegra/"
+T="/usr/lib/opengl/tegra3/lib"
+
 RESTRICT="strip mirror"
 
 src_unpack() {
@@ -25,16 +27,35 @@ src_unpack() {
 }
 
 src_install() {
-	cd Linux_for_Tegra/nv_tegra/
+	dodir /usr/lib/opengl/tegra3/lib
+
+	cd "${S}/usr/lib/"
+	#insinto  "${T}"
+	insinto /usr/lib/opengl/tegra3/lib
+	doins libGLESv1_CM.so.1
+	doins libGLESv2.so.2
+	doins libEGL.so.1
+
+	insinto /usr/lib/opengl/tegra3
+	touch .gles-only
+	doins .gles-only
+
+#	dodir /usr/lib/opengl/tegra3/lib/
+	dosym libGLESv1_CM.so.1 /usr/lib/opengl/tegra3/lib/libGLESv1_CM.so
+	dosym libGLESv2.so.2 /usr/lib/opengl/tegra3/lib/libGLESv2.so
+	dosym libEGL.so.1 /usr/lib/tegra3/lib/libEGL.so
+	#dosym libGLESv1_CM.so.1 "${T}"/libGLESv1_CM.so
+	#dosym libGLESv2.so.2 "${T}"/libGLESv2.so
+	#dosym libEGL.so.1 "${T}"/libEGL.so
+
+	#cd "${S}/usr/lib/"
+	#rm libGLESv1_CM.so
+	#rm libGLESv2.so.2
+	#rm libEGL.so.1
+
+	cd "${S}"
 	insinto /
 	doins -r usr lib etc
-
-	# TODO: add libGLES to /usr/lib/opengl that make eselect-opengl work
-
-	dodir /usr/lib
-	dosym libGLESv1_CM.so.1 /usr/lib/libGLESv1_CM.so
-	dosym libGLESv2.so.2 /usr/lib/libGLESv2.so
-	dosym libEGL.so.1 /usr/lib/libEGL.so
 
 	# FIXME: find xwindow abi
 	dodir /usr/lib/xorg/modules/drivers

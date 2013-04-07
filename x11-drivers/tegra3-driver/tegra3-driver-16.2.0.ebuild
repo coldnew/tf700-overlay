@@ -175,7 +175,7 @@ src_install() {
 
 	# Note: since libjpeg.so do not has jpeg_mem_src and will make other packages
         #       build failed, we disable install it here
-	dolib.so ${libdir}/libjpeg.so
+#	dolib.so ${libdir}/libjpeg.so
 }
 
 pkg_preinst() {

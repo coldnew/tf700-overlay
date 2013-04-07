@@ -189,7 +189,6 @@ pkg_postinst() {
 
 	# Switch to the tegra3 implementation
 	use X && "${ROOT}"/usr/bin/eselect opengl set --use-old tegra3
-	"${ROOT}"/usr/bin/eselect opencl set --use-old tegra3
 
 	elog "You must be in the video group to use the NVIDIA Tegra3 device"
 	elog "For more info, read the docs at"

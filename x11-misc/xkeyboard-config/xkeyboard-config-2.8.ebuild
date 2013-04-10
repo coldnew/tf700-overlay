@@ -34,7 +34,7 @@ XORG_CONFIGURE_OPTIONS=(
 )
 
 src_prepare() {
-#	epatch "${FILEDIR}"/tf201dock.patch
+	epatch "${FILESDIR}"/tf201dock.patch
 	xorg-2_src_prepare
 	if [[ ${XORG_EAUTORECONF} != no ]]; then
 		intltoolize --copy --automake || die

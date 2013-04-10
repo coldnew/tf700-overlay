@@ -23,6 +23,18 @@ diff -aurN xkeyboard-config-2.8.ori/rules/evdev.xml.in xkeyboard-config-2.8/rule
          <name>apple</name>
          <_description>Apple</_description>
          <vendor>Apple</vendor>
+diff -aurN xkeyboard-config-2.8.ori/symbols/Makefile.in xkeyboard-config-2.8/symbols/Makefile.in
+--- xkeyboard-config-2.8.ori/symbols/Makefile.in	2013-01-30 07:17:31.000000000 +0800
++++ xkeyboard-config-2.8/symbols/Makefile.in	2013-04-10 21:36:10.573637126 +0800
+@@ -321,7 +321,7 @@
+ ua us uz vn \
+ za \
+ altwin capslock compose ctrl empty eurosign rupeesign group inet \
+-keypad kpdl level3 level5 nbsp olpc shift srvr_ctrl typo
++keypad kpdl level3 level5 nbsp olpc shift srvr_ctrl typo tf201dock
+ 
+ EXTRA_DIST = $(symbols_DATA)
+ all: all-recursive
 diff -aurN xkeyboard-config-2.8.ori/symbols/tf201dock xkeyboard-config-2.8/symbols/tf201dock
 --- xkeyboard-config-2.8.ori/symbols/tf201dock	1970-01-01 08:00:00.000000000 +0800
 +++ xkeyboard-config-2.8/symbols/tf201dock	2013-04-10 21:02:40.880233004 +0800

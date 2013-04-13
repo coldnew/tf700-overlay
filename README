@@ -1,7 +1,9 @@
-PORTDIR_OVERLAY of Yen-Chin,Lee <coldnew.tw@gmail.com>
+PORTDIR_OVERLAY of tf700 by coldnew <coldnew.tw@gmail.com>
 -----------------------------------------------------
 
-This overlay is for ASUS tf700t (expermental)
+This overlay is used for ASUS Transformer Prime tf700t
+
+you can use this overlay with Gentoo, Funtoo, Sabayon Linux.
 
 INSTALL:
 
@@ -16,3 +18,6 @@ INSTALL:
      layman -a tf700
 
 After this you can emerge everything from this overlay.
+
+For more info about how to install Gentoo in your tf700, 
+please see the wiki.

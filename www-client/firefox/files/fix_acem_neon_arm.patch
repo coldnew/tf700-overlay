@@ -1,0 +1,15 @@
+diff -aurN mozilla-release.orig/media/webrtc/shared_libs.mk mozilla-release/media/webrtc/shared_libs.mk
+--- mozilla-release.orig/media/webrtc/shared_libs.mk	2013-04-10 11:02:22.000000000 +0800
++++ mozilla-release/media/webrtc/shared_libs.mk	2013-04-14 00:46:45.298252885 +0800
+@@ -51,13 +51,6 @@
+   $(NULL)
+ endif
+ 
+-# neon for ARM
+-ifeq ($(HAVE_ARM_NEON),1)
+-WEBRTC_LIBS += \
+-  $(call EXPAND_LIBNAME_PATH,aecm_neon,$(DEPTH)/media/webrtc/trunk/src/modules/modules_aecm_neon) \
+-  $(NULL)
+-endif
+-
+ 

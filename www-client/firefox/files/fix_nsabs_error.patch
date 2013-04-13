@@ -1,0 +1,13 @@
+diff -aurN mozilla-release.orig/xpcom/string/public/nsAlgorithm.h mozilla-release/xpcom/string/public/nsAlgorithm.h
+--- mozilla-release.orig/xpcom/string/public/nsAlgorithm.h	2013-04-10 11:03:02.000000000 +0800
++++ mozilla-release/xpcom/string/public/nsAlgorithm.h	2013-04-13 14:03:28.630226687 +0800
+@@ -42,7 +42,8 @@
+     return a > b ? a : b;
+   }
+ 
+-#if defined(_MSC_VER) && (_MSC_VER < 1600)
++#if (defined(_MSC_VER) && (_MSC_VER < 1600)) || \
++    (defined(_GLIBCXX_USE_LONG_LONG) && (!_GLIBCXX_USE_C99 || _GLIBCXX_USE_C99_LONG_LONG_DYNAMIC))
+ namespace std {
+ inline
+ long long

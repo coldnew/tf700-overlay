@@ -1,0 +1,24 @@
+diff -aurN cairo-1.12.12.orig/src/cairo-gl-private.h cairo-1.12.12/src/cairo-gl-private.h
+--- cairo-1.12.12.orig/src/cairo-gl-private.h	2013-01-28 00:10:51.000000000 +0800
++++ cairo-1.12.12/src/cairo-gl-private.h	2013-04-12 20:43:51.510092361 +0800
+@@ -238,7 +238,7 @@
+ #define CAIRO_GL_VAR_TYPE_MAX ((CAIRO_GL_VAR_TEXCOORDS << 3) | (CAIRO_GL_VAR_TEXCOORDS << 2) | (CAIRO_GL_VAR_TEXCOORDS << 1) | CAIRO_GL_VAR_TEXCOORDS)
+ 
+ typedef void (*cairo_gl_generic_func_t)(void);
+-typedef cairo_gl_generic_func_t (*cairo_gl_get_proc_addr_func_t)(const char *procname);
++typedef cairo_gl_generic_func_t (EGLAPIENTRY *cairo_gl_get_proc_addr_func_t)(const char *procname);
+ 
+ typedef struct _cairo_gl_dispatch {
+     /* Buffers */
+diff -aurN cairo-1.12.12.orig/src/cairo-gl-traps-compositor.c cairo-1.12.12/src/cairo-gl-traps-compositor.c
+--- cairo-1.12.12.orig/src/cairo-gl-traps-compositor.c	2013-01-04 04:06:16.000000000 +0800
++++ cairo-1.12.12/src/cairo-gl-traps-compositor.c	2013-04-12 20:44:27.523426534 +0800
+@@ -364,7 +364,7 @@
+     if (unlikely (status))
+ 	goto error;
+ 
+-    operand->texture.owns_surface = mask;
++    operand->texture.owns_surface = (cairo_gl_surface_t *)mask;
+     return CAIRO_STATUS_SUCCESS;
+ 
+ error:

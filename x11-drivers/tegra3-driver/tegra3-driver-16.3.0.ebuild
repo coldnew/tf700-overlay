@@ -4,6 +4,8 @@
 
 EAPI=4
 
+JPEG_ABI=8
+
 inherit eutils
 
 DESCRIPTION="NVIDIA Tegra3 X.org driver"
@@ -19,7 +21,9 @@ DEPEND="=media-libs/tegra3-codecs-${PV}
 	   <x11-base/xorg-server-1.14.0
 	   >=x11-base/xorg-server-1.13.0
 	   >=app-admin/eselect-opengl-1.0.9
-	)"
+	)
+	!media-libs/jpeg:0
+	!media-libs/libjpeg-turbo:0"
 
 RDEPEND="${DEPEND}"
 
@@ -71,8 +75,8 @@ donvidia() {
 }
 
 pkg_setup() {
-        NV_LIB="${S}/usr/lib"
-        NV_X11="${NV_LIB}/xorg/modules/drivers"
+	NV_LIB="${S}/usr/lib"
+	NV_X11="${NV_LIB}/xorg/modules/drivers"
 	NV_SOVER=1
 }
 
@@ -89,6 +93,9 @@ src_unpack() {
 	# know we only have gles libs
 	cd "${S}/usr/lib"
 	touch .gles-only
+
+	# rename libjpeg.so to libjpeg.so.8
+	mv libjpeg.so  libjpeg.so.${JPEG_ABI}
 }
 
 src_install() {
@@ -105,7 +112,7 @@ src_install() {
 		# Since we only have gles lib, we need to add .gles-only
 		# to make eselect-opengl work properly
 		#touch /usr/$(get_libdir)/opengl/tegra3/.gles-only
- 		insinto /usr/$(get_libdir)/opengl/tegra3
+		insinto /usr/$(get_libdir)/opengl/tegra3
 		doins ${libdir}/.gles-only
 
 		# Install Xorg DDX driver
@@ -120,69 +127,69 @@ src_install() {
 	# Install other libs
 	dolib.so ${libdir}/libardrv_dynamic.so
 	dolib.so ${libdir}/libcgdrv.so
-        dolib.so ${libdir}/libKD.so
-        dolib.so ${libdir}/libnvapputil.so
-        dolib.so ${libdir}/libnvavp.so
-        dolib.so ${libdir}/libnvcwm.so
-        dolib.so ${libdir}/libnvdc.so
-        dolib.so ${libdir}/libnvddk_2d.so
-        dolib.so ${libdir}/libnvddk_2d_v2.so
-        dolib.so ${libdir}/libnvddk_disp.so
-        dolib.so ${libdir}/libnvddk_kbc.so
-        dolib.so ${libdir}/libnvddk_mipihsi.so
-        dolib.so ${libdir}/libnvddk_nand.so
-        dolib.so ${libdir}/libnvddk_se.so
-        dolib.so ${libdir}/libnvddk_snor.so
-        dolib.so ${libdir}/libnvddk_spif.so
-        dolib.so ${libdir}/libnvddk_usbphy.so
-        dolib.so ${libdir}/libnvdispatch_helper.so
-        dolib.so ${libdir}/libnvglsi.so
-        dolib.so ${libdir}/libnvmedia_audio.so
-        dolib.so ${libdir}/libnvmm_audio.so
-        dolib.so ${libdir}/libnvmm_camera.so
-        dolib.so ${libdir}/libnvmm_contentpipe.so
-        dolib.so ${libdir}/libnvmm_image.so
-        dolib.so ${libdir}/libnvmmlite_audio.so
-        dolib.so ${libdir}/libnvmmlite_image.so
-        dolib.so ${libdir}/libnvmmlite.so
-        dolib.so ${libdir}/libnvmmlite_utils.so
-        dolib.so ${libdir}/libnvmmlite_video.so
-        dolib.so ${libdir}/libnvmm_manager.so
-        dolib.so ${libdir}/libnvmm_parser.so
-        dolib.so ${libdir}/libnvmm_service.so
-        dolib.so ${libdir}/libnvmm.so
-        dolib.so ${libdir}/libnvmm_utils.so
-        dolib.so ${libdir}/libnvmm_video.so
-        dolib.so ${libdir}/libnvmm_writer.so
-        dolib.so ${libdir}/libnvodm_disp.so
-        dolib.so ${libdir}/libnvodm_dtvtuner.so
-        dolib.so ${libdir}/libnvodm_imager.so
-        dolib.so ${libdir}/libnvodm_misc.so
-        dolib.so ${libdir}/libnvodm_query.so
-        dolib.so ${libdir}/libnvomxilclient.so
-        dolib.so ${libdir}/libnvomx.so
-        dolib.so ${libdir}/libnvos.so
-        dolib.so ${libdir}/libnvparser.so
-        dolib.so ${libdir}/libnvrm_graphics.so
-        dolib.so ${libdir}/libnvrm.so
-        dolib.so ${libdir}/libnvsm.so
-        dolib.so ${libdir}/libnvtestio.so
-        dolib.so ${libdir}/libnvtestresults.so
-        dolib.so ${libdir}/libnvtvmr.so
-        dolib.so ${libdir}/libnvwinsys.so
-        dolib.so ${libdir}/libnvwsi.so
+	dolib.so ${libdir}/libKD.so
+	dolib.so ${libdir}/libnvapputil.so
+	dolib.so ${libdir}/libnvavp.so
+	dolib.so ${libdir}/libnvcwm.so
+	dolib.so ${libdir}/libnvdc.so
+	dolib.so ${libdir}/libnvddk_2d.so
+	dolib.so ${libdir}/libnvddk_2d_v2.so
+	dolib.so ${libdir}/libnvddk_disp.so
+	dolib.so ${libdir}/libnvddk_kbc.so
+	dolib.so ${libdir}/libnvddk_mipihsi.so
+	dolib.so ${libdir}/libnvddk_nand.so
+	dolib.so ${libdir}/libnvddk_se.so
+	dolib.so ${libdir}/libnvddk_snor.so
+	dolib.so ${libdir}/libnvddk_spif.so
+	dolib.so ${libdir}/libnvddk_usbphy.so
+	dolib.so ${libdir}/libnvdispatch_helper.so
+	dolib.so ${libdir}/libnvglsi.so
+	dolib.so ${libdir}/libnvmedia_audio.so
+	dolib.so ${libdir}/libnvmm_audio.so
+	dolib.so ${libdir}/libnvmm_camera.so
+	dolib.so ${libdir}/libnvmm_contentpipe.so
+	dolib.so ${libdir}/libnvmm_image.so
+	dolib.so ${libdir}/libnvmmlite_audio.so
+	dolib.so ${libdir}/libnvmmlite_image.so
+	dolib.so ${libdir}/libnvmmlite.so
+	dolib.so ${libdir}/libnvmmlite_utils.so
+	dolib.so ${libdir}/libnvmmlite_video.so
+	dolib.so ${libdir}/libnvmm_manager.so
+	dolib.so ${libdir}/libnvmm_parser.so
+	dolib.so ${libdir}/libnvmm_service.so
+	dolib.so ${libdir}/libnvmm.so
+	dolib.so ${libdir}/libnvmm_utils.so
+	dolib.so ${libdir}/libnvmm_video.so
+	dolib.so ${libdir}/libnvmm_writer.so
+	dolib.so ${libdir}/libnvodm_disp.so
+	dolib.so ${libdir}/libnvodm_dtvtuner.so
+	dolib.so ${libdir}/libnvodm_imager.so
+	dolib.so ${libdir}/libnvodm_misc.so
+	dolib.so ${libdir}/libnvodm_query.so
+	dolib.so ${libdir}/libnvomxilclient.so
+	dolib.so ${libdir}/libnvomx.so
+	dolib.so ${libdir}/libnvos.so
+	dolib.so ${libdir}/libnvparser.so
+	dolib.so ${libdir}/libnvrm_graphics.so
+	dolib.so ${libdir}/libnvrm.so
+	dolib.so ${libdir}/libnvsm.so
+	dolib.so ${libdir}/libnvtestio.so
+	dolib.so ${libdir}/libnvtestresults.so
+	dolib.so ${libdir}/libnvtvmr.so
+	dolib.so ${libdir}/libnvwinsys.so
+	dolib.so ${libdir}/libnvwsi.so
 
 	# Note: since libjpeg.so do not has jpeg_mem_src and will make other packages
-        #       build failed, we disable install it here
-#	dolib.so ${libdir}/libjpeg.so
+	#       build failed, we disable install it here
+	dolib.so ${libdir}/libjpeg.so.8
 }
 
 pkg_preinst() {
-              # Clean the dynamic libGLES stuff's home to ensure
-	      # we dont have stale libs floating around
-	      if [ -d "${ROOT}"/usr/lib/opengl/tegra3 ] ; then
-	      	 rm -rf "${ROOT}"/usr/lib/opengl/tegra3/*
-	      fi
+		# Clean the dynamic libGLES stuff's home to ensure
+	    # we dont have stale libs floating around
+	    if [ -d "${ROOT}"/usr/lib/opengl/tegra3 ] ; then
+			rm -rf "${ROOT}"/usr/lib/opengl/tegra3/*
+	    fi
 }
 
 pkg_postinst() {

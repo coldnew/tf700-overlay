@@ -16,6 +16,6 @@ IUSE="static-libs"
 RDEPEND="|| (
 		>=media-libs/libjpeg-turbo-1.2.0:0[static-libs?]
 		>=media-libs/jpeg-8d:0[static-libs?]
-		>=x11-drivers/tegra3-driver:0
+		x11-drivers/tegra3-driver
 		)"
 DEPEND=""

@@ -1,0 +1,115 @@
+diff -aurN libkdcraw-4.10.2.orig/libraw/CMakeLists.txt libkdcraw-4.10.2/libraw/CMakeLists.txt
+--- libkdcraw-4.10.2.orig/libraw/CMakeLists.txt	2013-03-01 15:01:46.014448409 +0800
++++ libkdcraw-4.10.2/libraw/CMakeLists.txt	2013-04-13 17:00:39.223934474 +0800
+@@ -88,29 +88,25 @@
+ 
+ FIND_PACKAGE(JPEG)
+ IF(JPEG_FOUND)
+-    # check version of libjpeg
+-    # inspired from digikam/CMakeLists.txt
+-    SET(_jpeglib_version_source "#include <stddef.h>\n#include<stdio.h>\n#include <jpeglib.h>\n int main()\n {\n #if (JPEG_LIB_VERSION >= 80) \n #error JPEG_LIB_VERSION >= 80 found \n #endif \n }\n")
+-    SET(_jpeglib_version_source_file ${CMAKE_BINARY_DIR}/CMakeTmp/cmake_jpeglib_version_check.cpp)
+-    FILE(WRITE "${_jpeglib_version_source_file}" "${_jpeglib_version_source}")
+-    SET(_jpeglib_version_include_dirs "-DINCLUDE_DIRECTORIES:STRING=${JPEG_INCLUDE_DIR}")
+-
+-    TRY_COMPILE(_jpeglib_version_compile_result ${CMAKE_BINARY_DIR} ${_jpeglib_version_source_file}
+-                CMAKE_FLAGS "${_jpeglib_version_include_dirs}"
+-                COMPILE_OUTPUT_VARIABLE _jpeglib_version_compile_output_var
+-               )
+-    IF(_jpeglib_version_compile_result)
+-        MESSAGE(STATUS "Identified libjpeg version less than 80 (too low)")
+-        SET(JPEG_FOUND FALSE)
+-    ENDIF()
++    INCLUDE(CheckSymbolExists)
++    # check for the jpeg_mem_src function
++    SET(OLD_CMAKE_REQUIRED_INCLUDES "${CMAKE_REQUIRED_INCLUDES}")
++    LIST(APPEND CMAKE_REQUIRED_INCLUDES "${JPEG_INCLUDE_DIR}")
++    SET(OLD_CMAKE_REQUIRED_LIBRARIES "${CMAKE_REQUIRED_LIBRARIES}")
++    LIST(APPEND CMAKE_REQUIRED_LIBRARIES "${JPEG_LIBRARY}")
++    CHECK_SYMBOL_EXISTS(jpeg_mem_src "stddef.h;stdio.h;jpeglib.h" HAVE_JPEG_MEM_SRC)
++    SET(CMAKE_REQUIRED_INCLUDES "${OLD_CMAKE_REQUIRED_INCLUDES}")
++    SET(CMAKE_REQUIRED_LIBRARIES "${OLD_CMAKE_REQUIRED_LIBRARIES}")
+ ENDIF(JPEG_FOUND)
+ 
+-MACRO_LOG_FEATURE(JPEG_FOUND "libjpeg" "JPEG image format support" "http://www.ijg.org" FALSE "80" "needed for the LibRaw DNG lossy codec")
++MACRO_LOG_FEATURE(JPEG_FOUND "libjpeg" "JPEG image format support" "http://www.ijg.org" FALSE "" "needed for the LibRaw DNG lossy codec")
+ 
+ # Flag to use libjpeg with LibRaw DNG lossy codec
+ IF(JPEG_FOUND)
+     ADD_DEFINITIONS(-DUSE_JPEG)
+-    ADD_DEFINITIONS(-DUSE_JPEG8)
++    IF(HAVE_JPEG_MEM_SRC)
++        ADD_DEFINITIONS(-DUSE_JPEG8)
++    ENDIF(HAVE_JPEG_MEM_SRC)
+     INCLUDE_DIRECTORIES(${JPEG_INCLUDE_DIR})
+ ENDIF()
+ 
+diff -aurN libkdcraw-4.10.2.orig/libraw/RawSpeed/DngDecoderSlices.cpp libkdcraw-4.10.2/libraw/RawSpeed/DngDecoderSlices.cpp
+--- libkdcraw-4.10.2.orig/libraw/RawSpeed/DngDecoderSlices.cpp	2013-03-01 15:01:45.946449248 +0800
++++ libkdcraw-4.10.2/libraw/RawSpeed/DngDecoderSlices.cpp	2013-04-13 17:01:18.913935871 +0800
+@@ -88,7 +88,7 @@
+ 
+ }
+ 
+-#if JPEG_LIB_VERSION < 80
++#ifndef USE_JPEG8
+ /* Read JPEG image from a memory segment */
+ 
+ static void init_source (j_decompress_ptr cinfo) {}
+diff -aurN libkdcraw-4.10.2.orig/libraw/src/libraw_datastream.cpp libkdcraw-4.10.2/libraw/src/libraw_datastream.cpp
+--- libkdcraw-4.10.2.orig/libraw/src/libraw_datastream.cpp	2013-03-01 15:01:46.026448262 +0800
++++ libkdcraw-4.10.2/libraw/src/libraw_datastream.cpp	2013-04-13 17:04:50.113943311 +0800
+@@ -443,9 +443,52 @@
+ #endif
+ }
+ 
++#if !defined(NO_JPEG) && !defined(USE_JPEG8)
++/* Read JPEG image from a memory segment
++   (from libraw/RawSpeed/DngDecoderSlices.cpp, LGPLv2+) */
++
++static void init_source (j_decompress_ptr cinfo) {}
++static boolean fill_input_buffer (j_decompress_ptr cinfo)
++{
++  struct jpeg_source_mgr* src = (struct jpeg_source_mgr*) cinfo->src;
++  return !!src->bytes_in_buffer;
++}
++static void skip_input_data (j_decompress_ptr cinfo, long num_bytes)
++{
++  struct jpeg_source_mgr* src = (struct jpeg_source_mgr*) cinfo->src;
++
++  if (num_bytes > (int)src->bytes_in_buffer)
++    throw LIBRAW_EXCEPTION_IO_EOF;
++  if (num_bytes > 0) {
++    src->next_input_byte += (size_t) num_bytes;
++    src->bytes_in_buffer -= (size_t) num_bytes;
++  }
++}
++static void term_source (j_decompress_ptr cinfo) {}
++static void jpeg_mem_src (j_decompress_ptr cinfo, unsigned char* buffer, long nbytes)
++{
++  struct jpeg_source_mgr* src;
++
++  if (cinfo->src == NULL) {   /* first time for this JPEG object? */
++    cinfo->src = (struct jpeg_source_mgr *)
++      (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_PERMANENT,
++      sizeof(struct jpeg_source_mgr));
++  }
++
++  src = (struct jpeg_source_mgr*) cinfo->src;
++  src->init_source = init_source;
++  src->fill_input_buffer = fill_input_buffer;
++  src->skip_input_data = skip_input_data;
++  src->resync_to_restart = jpeg_resync_to_restart; /* use default method */
++  src->term_source = term_source;
++  src->bytes_in_buffer = nbytes;
++  src->next_input_byte = (JOCTET*)buffer;
++}
++#endif
++
+ int LibRaw_buffer_datastream::jpeg_src(void *jpegdata)
+ {
+-#if defined(NO_JPEG) || !defined (USE_JPEG8)
++#if defined(NO_JPEG) 
+   return -1;
+ #else
+   j_decompress_ptr cinfo = (j_decompress_ptr) jpegdata;

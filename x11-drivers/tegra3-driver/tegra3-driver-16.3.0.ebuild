@@ -22,8 +22,7 @@ DEPEND="=media-libs/tegra3-codecs-${PV}
 	   >=x11-base/xorg-server-1.13.0
 	   >=app-admin/eselect-opengl-1.0.9
 	)
-	!media-libs/jpeg:0
-	!media-libs/libjpeg-turbo:0"
+	>=media-libs/libjpeg-turbo-1.2.1"
 
 RDEPEND="${DEPEND}"
 
@@ -95,7 +94,7 @@ src_unpack() {
 	touch .gles-only
 
 	# rename libjpeg.so to libjpeg.so.8
-	mv libjpeg.so  libjpeg.so.${JPEG_ABI}
+	mv libjpeg.so  libjpeg-tegra3.so.${JPEG_ABI}
 }
 
 src_install() {
@@ -181,8 +180,8 @@ src_install() {
 
 	# Note: since libjpeg.so do not has jpeg_mem_src and will make other packages
 	#       build failed, we disable install it here
-	dolib.so ${libdir}/libjpeg.so.${JPEG_ABI}
-	dosym libjpeg.so.${JPEG_ABI} /usr/lib/libjpeg.so
+	dolib.so ${libdir}/libjpeg-tegra3.so.${JPEG_ABI}
+	dosym libjpeg-tegra3.so.${JPEG_ABI} /usr/lib/libjpeg.so
 }
 
 pkg_preinst() {

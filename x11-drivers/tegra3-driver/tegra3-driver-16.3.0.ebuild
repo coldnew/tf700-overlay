@@ -4,8 +4,6 @@
 
 EAPI=4
 
-JPEG_ABI=8
-
 inherit eutils
 
 DESCRIPTION="NVIDIA Tegra3 X.org driver"
@@ -14,7 +12,7 @@ SRC_URI="http://developer.nvidia.com/sites/default/files/akamai/mobile/files/L4T
 
 LICENSE="nvidia"
 SLOT="0"
-KEYWORDS="~arm ~amd64"
+KEYWORDS="arm ~arm"
 IUSE="+X"
 DEPEND="=media-libs/tegra3-codecs-${PV}
 	X? (
@@ -88,13 +86,17 @@ src_unpack() {
 	cd "${S}/usr/lib/xorg/modules/drivers"
 	mv tegra_drv.abi13.so tegra_drv.so
 
+	# remove tegra_drv.abi*.so
+	rm tegra_drv.abi*.so
+
 	# create dummy file .gles-only, this file is used to let eselect-opengl
 	# know we only have gles libs
 	cd "${S}/usr/lib"
 	touch .gles-only
 
-	# rename libjpeg.so to libjpeg.so.8
-	mv libjpeg.so  libjpeg-tegra3.so.${JPEG_ABI}
+	# remove libjpeg.so since it will let some package build
+	# failed and conflict with libjpeg-turbo
+	rm libjpeg.so
 }
 
 src_install() {
@@ -177,11 +179,6 @@ src_install() {
 	dolib.so ${libdir}/libnvtvmr.so
 	dolib.so ${libdir}/libnvwinsys.so
 	dolib.so ${libdir}/libnvwsi.so
-
-	# Note: since libjpeg.so do not has jpeg_mem_src and will make other packages
-	#       build failed, we disable install it here
-	dolib.so ${libdir}/libjpeg-tegra3.so.${JPEG_ABI}
-	dosym libjpeg-tegra3.so.${JPEG_ABI} /usr/lib/libjpeg.so
 }
 
 pkg_preinst() {

@@ -1,0 +1,15 @@
+--- mozilla-release.orig/media/webrtc/shared_libs.mk.ori	2013-06-12 16:23:01.840000003 +0800
++++ mozilla-release.orig/media/webrtc/shared_libs.mk	2013-06-12 16:23:41.640000003 +0800
+@@ -46,12 +46,6 @@
+   $(NULL)
+ endif
+ 
+-# neon for ARM
+-ifeq ($(HAVE_ARM_NEON),1)
+-WEBRTC_LIBS += \
+-  $(call EXPAND_LIBNAME_PATH,aecm_neon,$(DEPTH)/media/webrtc/trunk/webrtc/modules/modules_aecm_neon) \
+-  $(NULL)
+-endif
+ 
+ 
+ # If you enable one of these codecs in webrtc_config.gypi, you'll need to re-add the

@@ -8,12 +8,22 @@ inherit eutils
 
 DESCRIPTION="NVIDIA Tegra3 X.org driver"
 HOMEPAGE="https://developer.nvidia.com/linux-tegra"
-SRC_URI="http://developer.nvidia.com/sites/default/files/akamai/mobile/files/L4T/cardhu_Tegra-Linux-R${PV}_armhf.tbz2"
+SRC_URI="http://developer.nvidia.com/sites/default/files/akamai/mobile/files/L4T/cardhu_Tegra-Linux-R${PV}_armhf.tbz2
+http://developer.nvidia.com/sites/default/files/akamai/mobile/files/L4T/cardhu_Tegra-Linux-tegra_drv_abi14-R${PV}_armhf.tbz2"
+
+#http://developer.nvidia.com/sites/default/files/akamai/mobile/files/L4T/cardhu_Tegra-Linux-tegra_drv_abi14-R${PV}_armhf.tbz2"
 
 LICENSE="nvidia"
 SLOT="0"
 KEYWORDS="arm ~arm"
 IUSE="+X"
+#DEPEND="=media-libs/tegra3-codecs-${PV}
+#	X? (
+#	   >=x11-base/xorg-server-1.14.0
+#	   >=app-admin/eselect-opengl-1.0.9
+#	)
+#	>=media-libs/libjpeg-turbo-1.2.1"
+
 DEPEND="=media-libs/tegra3-codecs-${PV}
 	X? (
 	   <x11-base/xorg-server-1.14.0
@@ -78,12 +88,20 @@ pkg_setup() {
 }
 
 src_unpack() {
-	unpack "${A}"
+
+	# since we have multiple package, unpack it one by one
+	IFS=' ' read -ra F <<< "$A"
+	for i in "${F[@]}"; do
+		unpack "${i}"
+	done
+
 	cd "${S}"
+	unpack ./../../tegra_drv_abi_14.tbz2
 	unpack ./nvidia_drivers.tbz2
 
 	# rename tegra_drv.abi13.so to tegra_drv.so
 	cd "${S}/usr/lib/xorg/modules/drivers"
+	#mv tegra_drv.abi14.so tegra_drv.so
 	mv tegra_drv.abi13.so tegra_drv.so
 
 	# remove tegra_drv.abi*.so
@@ -126,59 +144,14 @@ src_install() {
 	doins -r lib etc
 
 	# Install other libs
-	dolib.so ${libdir}/libardrv_dynamic.so
-	dolib.so ${libdir}/libcgdrv.so
-	dolib.so ${libdir}/libKD.so
-	dolib.so ${libdir}/libnvapputil.so
-	dolib.so ${libdir}/libnvavp.so
-	dolib.so ${libdir}/libnvcwm.so
-	dolib.so ${libdir}/libnvdc.so
-	dolib.so ${libdir}/libnvddk_2d.so
-	dolib.so ${libdir}/libnvddk_2d_v2.so
-	dolib.so ${libdir}/libnvddk_disp.so
-	dolib.so ${libdir}/libnvddk_kbc.so
-	dolib.so ${libdir}/libnvddk_mipihsi.so
-	dolib.so ${libdir}/libnvddk_nand.so
-	dolib.so ${libdir}/libnvddk_se.so
-	dolib.so ${libdir}/libnvddk_snor.so
-	dolib.so ${libdir}/libnvddk_spif.so
-	dolib.so ${libdir}/libnvddk_usbphy.so
-	dolib.so ${libdir}/libnvdispatch_helper.so
-	dolib.so ${libdir}/libnvglsi.so
-	dolib.so ${libdir}/libnvmedia_audio.so
-	dolib.so ${libdir}/libnvmm_audio.so
-	dolib.so ${libdir}/libnvmm_camera.so
-	dolib.so ${libdir}/libnvmm_contentpipe.so
-	dolib.so ${libdir}/libnvmm_image.so
-	dolib.so ${libdir}/libnvmmlite_audio.so
-	dolib.so ${libdir}/libnvmmlite_image.so
-	dolib.so ${libdir}/libnvmmlite.so
-	dolib.so ${libdir}/libnvmmlite_utils.so
-	dolib.so ${libdir}/libnvmmlite_video.so
-	dolib.so ${libdir}/libnvmm_manager.so
-	dolib.so ${libdir}/libnvmm_parser.so
-	dolib.so ${libdir}/libnvmm_service.so
-	dolib.so ${libdir}/libnvmm.so
-	dolib.so ${libdir}/libnvmm_utils.so
-	dolib.so ${libdir}/libnvmm_video.so
-	dolib.so ${libdir}/libnvmm_writer.so
-	dolib.so ${libdir}/libnvodm_disp.so
-	dolib.so ${libdir}/libnvodm_dtvtuner.so
-	dolib.so ${libdir}/libnvodm_imager.so
-	dolib.so ${libdir}/libnvodm_misc.so
-	dolib.so ${libdir}/libnvodm_query.so
-	dolib.so ${libdir}/libnvomxilclient.so
-	dolib.so ${libdir}/libnvomx.so
-	dolib.so ${libdir}/libnvos.so
-	dolib.so ${libdir}/libnvparser.so
-	dolib.so ${libdir}/libnvrm_graphics.so
-	dolib.so ${libdir}/libnvrm.so
-	dolib.so ${libdir}/libnvsm.so
-	dolib.so ${libdir}/libnvtestio.so
-	dolib.so ${libdir}/libnvtestresults.so
-	dolib.so ${libdir}/libnvtvmr.so
-	dolib.so ${libdir}/libnvwinsys.so
-	dolib.so ${libdir}/libnvwsi.so
+	cd ${libdir}
+	for i in *.so; do
+		dolib.so $i
+	done
+
+	# Install udev rules
+	insinto /etc/udev/reules.d
+	doins "${FILESDIR}/99-tegra-devices.rules" || die "dailed to install 99-tegra-devices.rules"
 }
 
 pkg_preinst() {

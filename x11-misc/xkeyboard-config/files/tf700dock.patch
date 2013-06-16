@@ -1,0 +1,47 @@
+diff -aurN xkeyboard-config-2.9.ori/rules/evdev.m_k.part xkeyboard-config-2.9/rules/evdev.m_k.part
+--- xkeyboard-config-2.9.ori/rules/evdev.m_k.part	2013-06-16 00:32:25.540000001 +0800
++++ xkeyboard-config-2.9/rules/evdev.m_k.part	2013-06-16 00:32:47.610000002 +0800
+@@ -1,4 +1,5 @@
+   pc98		=	evdev(pc98)
++  tf700dock     =       +tf700dock
+   applealu_jis	=	evdev+macintosh(jisevdev)
+   olpc          =       evdev+olpc(olpc)
+   olpcm         =       evdev+olpc(olpcm)
+diff -aurN xkeyboard-config-2.9.ori/rules/evdev.xml.in xkeyboard-config-2.9/rules/evdev.xml.in
+--- xkeyboard-config-2.9.ori/rules/evdev.xml.in	2013-06-16 00:32:25.540000001 +0800
++++ xkeyboard-config-2.9/rules/evdev.xml.in	2013-06-16 00:32:47.610000002 +0800
+@@ -1108,6 +1108,13 @@
+     </model>
+     <model>
+       <configItem>
++        <name>tf700dock</name>
++        <_description>ASUS Transformer Prime TF700 Dock</_description>
++        <vendor>Asus</vendor>
++      </configItem>
++    </model>
++    <model>
++      <configItem>
+         <name>apple</name>
+         <_description>Apple</_description>
+         <vendor>Apple</vendor>
+diff -aurN xkeyboard-config-2.9.ori/keycodes/Makefile.am xkeyboard-config-2.9/keycodes/Makefile.am
+--- xkeyboard-config-2.9.ori/keycodes/Makefile.am	2013-04-21 04:21:55.000000000 +0800
++++ xkeyboard-config-2.9/keycodes/Makefile.am	2013-06-16 10:22:22.220000002 +0800
+@@ -17,6 +17,7 @@
+ sun \
+ xfree86 \
+ xfree98 \
++tf700dock \
+ README
+ 
+ EXTRA_DIST = $(keycodes_DATA)
+--- xkeyboard-config-2.9.ori/keycodes/Makefile.in	2013-05-29 05:03:17.000000000 +0800
++++ xkeyboard-config-2.9/keycodes/Makefile.in	2013-06-16 11:43:39.190000003 +0800
+@@ -302,6 +302,7 @@
+ sun \
+ xfree86 \
+ xfree98 \
++tf700dock \
+ README
+ 
+ EXTRA_DIST = $(keycodes_DATA)

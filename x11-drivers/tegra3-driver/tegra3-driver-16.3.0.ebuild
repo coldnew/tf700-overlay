@@ -17,20 +17,20 @@ LICENSE="nvidia"
 SLOT="0"
 KEYWORDS="arm ~arm"
 IUSE="+X"
-DEPEND="=media-libs/tegra3-codecs-${PV}
-	X? (
-	   >=x11-base/xorg-server-1.14.0
-	   >=app-admin/eselect-opengl-1.0.9
-	)
-	>=media-libs/libjpeg-turbo-1.2.1"
-
 #DEPEND="=media-libs/tegra3-codecs-${PV}
 #	X? (
-#	   <x11-base/xorg-server-1.14.0
-#	   >=x11-base/xorg-server-1.13.0
+#	   >=x11-base/xorg-server-1.14.0
 #	   >=app-admin/eselect-opengl-1.0.9
 #	)
 #	>=media-libs/libjpeg-turbo-1.2.1"
+
+DEPEND="=media-libs/tegra3-codecs-${PV}
+	X? (
+	   <x11-base/xorg-server-1.14.0
+	   >=x11-base/xorg-server-1.13.0
+	   >=app-admin/eselect-opengl-1.0.9
+	)
+	>=media-libs/libjpeg-turbo-1.2.1"
 
 RDEPEND="${DEPEND}"
 
@@ -101,7 +101,8 @@ src_unpack() {
 
 	# rename tegra_drv.abi13.so to tegra_drv.so
 	cd "${S}/usr/lib/xorg/modules/drivers"
-	mv tegra_drv.abi14.so tegra_drv.so
+	#mv tegra_drv.abi14.so tegra_drv.so
+	mv tegra_drv.abi13.so tegra_drv.so
 
 	# remove tegra_drv.abi*.so
 	rm tegra_drv.abi*.so

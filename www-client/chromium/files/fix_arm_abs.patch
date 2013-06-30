@@ -1,0 +1,42 @@
+--- media/base/audio_splicer.cc.ori	2013-06-30 22:46:07.810000001 +0800
++++ media/base/audio_splicer.cc	2013-06-30 22:47:03.490000000 +0800
+@@ -60,7 +60,7 @@
+   base::TimeDelta expected_timestamp = output_timestamp_helper_.GetTimestamp();
+   base::TimeDelta delta = timestamp - expected_timestamp;
+ 
+-  if (std::abs(delta.InMilliseconds()) > kMaxTimeDeltaInMilliseconds) {
++  if (std::labs(delta.InMilliseconds()) > kMaxTimeDeltaInMilliseconds) {
+     DVLOG(1) << "Timestamp delta too large: " << delta.InMicroseconds() << "us";
+     return false;
+   }
+@@ -69,7 +69,7 @@
+   if (delta != base::TimeDelta())
+     bytes_to_fill = output_timestamp_helper_.GetBytesToTarget(timestamp);
+ 
+-  if (bytes_to_fill == 0 || std::abs(bytes_to_fill) < min_gap_size_) {
++  if (bytes_to_fill == 0 || std::labs(bytes_to_fill) < min_gap_size_) {
+     AddOutputBuffer(input);
+     return true;
+   }
+--- media/filters/audio_renderer_algorithm_unittest.cc.ori	2013-06-30 23:36:46.260000002 +0800
++++ media/filters/audio_renderer_algorithm_unittest.cc	2013-06-30 23:36:54.870000000 +0800
+@@ -141,7 +141,7 @@
+ 
+     // Calculate the percentage difference from the target |playback_rate| as a
+     // fraction from 0.0 to 1.0.
+-    double delta = std::abs(1.0 - (actual_playback_rate / playback_rate));
++    double delta = std::labs(1.0 - (actual_playback_rate / playback_rate));
+ 
+     EXPECT_LE(delta, kMaxAcceptableDelta);
+   }
+--- media/filters/decrypting_audio_decoder.cc.ori	2013-06-30 23:36:10.900000001 +0800
++++ media/filters/decrypting_audio_decoder.cc	2013-06-30 23:36:20.010000001 +0800
+@@ -29,7 +29,7 @@
+   // Out of sync of 100ms would be pretty noticeable and we should keep any
+   // drift below that.
+   const int64 kOutOfSyncThresholdInMicroseconds = 100000;
+-  return std::abs(timestamp_1.InMicroseconds() - timestamp_2.InMicroseconds()) >
++  return std::labs(timestamp_1.InMicroseconds() - timestamp_2.InMicroseconds()) >
+          kOutOfSyncThresholdInMicroseconds;
+ }
+ 
